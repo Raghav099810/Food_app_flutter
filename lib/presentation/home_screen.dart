@@ -12,30 +12,42 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: ()
-      async{
-        context.read<RestaurantBloc>().add(FetchRestaurants());
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.orange.shade400,
-          title: const Text("Local Restaurants"),
-        ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.orange, Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange.shade400,
+        title: const Text("Local Restaurants"),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+        ),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<RestaurantBloc>().add(FetchRestaurants());
+          },
           child: BlocBuilder<RestaurantBloc, RestaurantState>(
             builder: (context, state) {
               if (state is RestaurantLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is RestaurantLoadedState) {
                 final restaurants = state.restaurantData;
+
+                if (restaurants.isEmpty) {
+                  // Wrap empty state in a scrollable
+                  return ListView(
+                    children: const [
+                      SizedBox(
+                        height: 400,
+                        child: Center(child: Text("No restaurants found")),
+                      ),
+                    ],
+                  );
+                }
+
                 return ListView.builder(
                   itemCount: restaurants.length,
                   padding: const EdgeInsets.all(16),
@@ -56,14 +68,31 @@ class HomeScreen extends StatelessWidget {
                   },
                 );
               } else if (state is RestaurantErrorState) {
-                return Center(
-                  child: Text(
-                    state.message,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                // Also make error scrollable
+                return ListView(
+                  children: [
+                    SizedBox(
+                      height: 400,
+                      child: Center(
+                        child: Text(
+                          state.message,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               }
-              return const SizedBox.shrink();
+              return ListView(
+                children: [
+                  Center(
+                    child: Text(
+                      "Something went wrong",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              );
             },
           ),
         ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_app/utils/netwrok_image.dart';
+import 'package:food_app/utils/product_card.dart';
 import '../bloc/food_bloc/food_bloc.dart';
-import '../bloc/food_bloc/food_event.dart';
 import '../bloc/food_bloc/food_state.dart';
 
 class CartScreen extends StatelessWidget {
@@ -13,10 +12,8 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Cart"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.deepOrange.shade700,
       ),
-      extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -32,7 +29,7 @@ class CartScreen extends StatelessWidget {
               int total = cart.fold(
                 0,
                 (sum, item) =>
-                    sum + (item.food.price ?? 0) * (item.quantity ?? 0),
+                    sum + (item.food.price ?? 0) * (item.quantity),
               );
 
               return Column(
@@ -44,52 +41,7 @@ class CartScreen extends StatelessWidget {
                       itemCount: cart.length,
                       itemBuilder: (context, index) {
                         final item = cart[index];
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          margin: const EdgeInsets.only(bottom: 16),
-                          elevation: 4,
-                          child: ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: networkImageHandler(
-                                imageUrl: item.food.imageUrl,
-                              ),
-                            ),
-                            title: Text(
-                              item.food.name ?? 'N/A',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              '₹${item.food.price} x ${item.quantity}',
-                              style: const TextStyle(color: Colors.black54),
-                            ),
-                            trailing: SizedBox(
-                              width: 100,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    onPressed: () => context
-                                        .read<FoodBloc>()
-                                        .add(DecrementQuantity(item.food)),
-                                  ),
-                                  Text('${item.quantity}'),
-                                  IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () => context
-                                        .read<FoodBloc>()
-                                        .add(IncrementQuantity(item.food)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                        return CartItemCard(item: item);
                       },
                     ),
                   ),

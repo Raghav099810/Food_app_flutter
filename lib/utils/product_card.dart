@@ -240,3 +240,51 @@ class FoodItemCard extends StatelessWidget {
     );
   }
 }
+
+class CartItemCard extends StatelessWidget {
+  final CartItem item; // your cart item model
+
+  const CartItemCard({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 4,
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: networkImageHandler(imageUrl: item.food.imageUrl),
+        ),
+        title: Text(
+          item.food.name ?? 'N/A',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          '₹${item.food.price} x ${item.quantity}',
+          style: const TextStyle(color: Colors.black54),
+        ),
+        trailing: SizedBox(
+          width: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                child: const Icon(Icons.remove),
+                onTap: () =>
+                    context.read<FoodBloc>().add(DecrementQuantity(item.food)),
+              ),
+              Text('${item.quantity}'),
+              GestureDetector(
+                child: const Icon(Icons.add),
+                onTap: () =>
+                    context.read<FoodBloc>().add(IncrementQuantity(item.food)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

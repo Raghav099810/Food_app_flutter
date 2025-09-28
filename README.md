@@ -1,26 +1,24 @@
-# food_app
+# 🍔 Food App
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A Flutter application for browsing restaurants, viewing menus, adding items to cart, and placing orders.  
+Built with **BLoC architecture** for state management and follows clean architecture principles.
 
 ---
 
-## 📱 Demo App & Unit Tests
+## 📱 Demo App
 
-- Live App: [food_app](https://drive.google.com/file/d/1v1ofsyu-1rtId22pXon0RdUSnc9IuZBJ/view?usp=sharing)
-- Unit Tests: [food_app/tests](https://github.com/YourUsername/food_app/tree/main/test)
+<table>
+  <tr>
+    <td><img src="assets/home_screen.jpeg" alt="Home Screen" width="720"/></td>
+    <td><img src="assets/food_screen.jpeg" alt="Menu Screen" width="720"/></td>
+    <td><img src="assets/cart_screen.jpeg" alt="Cart Screen" width="720"/></td>
+  </tr>
+  <tr>
+    <td align="center"> Home</td>
+    <td align="center"> Menu</td>
+    <td align="center">Cart</td>
+  </tr>
+</table>
 
 ---
 
@@ -37,5 +35,24 @@ This app uses **BLoC architecture**. The test structure is organized by layer:
 
 ---
 
-## ⚙ How to Run Tests
+## 📝 Example Unit Tests
 
+### Bloc Test
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:food_app/bloc/restaurant_bloc.dart';
+
+void main() {
+  group('RestaurantBloc Test', () {
+    blocTest<RestaurantBloc, RestaurantState>(
+      'emits [Loading, Loaded] when FetchRestaurantsEvent is added',
+      build: () => RestaurantBloc(),
+      act: (bloc) => bloc.add(FetchRestaurantsEvent()),
+      expect: () => [
+        RestaurantLoading(),
+        isA<RestaurantLoaded>(),
+      ],
+    );
+  });
+}
