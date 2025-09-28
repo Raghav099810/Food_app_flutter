@@ -3,6 +3,8 @@
 A Flutter application for browsing restaurants, viewing menus, adding items to cart, and placing orders.  
 Built with **BLoC architecture** for state management and follows clean architecture principles.
 
+[Download Apk to test the app](https://drive.google.com/file/d/1bo9euJ1V2nuKHyfXDJ3GOFh3dDhX9xna/view?usp=sharing)
+
 ---
 
 ## 📱 Demo App
@@ -32,27 +34,4 @@ This app uses **BLoC architecture**. The test structure is organized by layer:
 | Repository  | Data returns list of restaurants / menus, handles errors         | `RestaurantRepository.getRestaurantList()` returns valid list; errors are caught  |
 | UI / Widget | UI responds to bloc states                                       | Loading shows progress, loaded shows list, error shows error message              |
 | Integration | Full flow: select restaurant → view menu → add to cart → checkout | Navigating through app updates UI and BLoC states accordingly                     |
-
----
-
-## 📝 Example Unit Tests
-
-### Bloc Test
-```dart
-import 'package:flutter_test/flutter_test.dart';
-import 'package:bloc_test/bloc_test.dart';
-import 'package:food_app/bloc/restaurant_bloc.dart';
-
-void main() {
-  group('RestaurantBloc Test', () {
-    blocTest<RestaurantBloc, RestaurantState>(
-      'emits [Loading, Loaded] when FetchRestaurantsEvent is added',
-      build: () => RestaurantBloc(),
-      act: (bloc) => bloc.add(FetchRestaurantsEvent()),
-      expect: () => [
-        RestaurantLoading(),
-        isA<RestaurantLoaded>(),
-      ],
-    );
-  });
-}
+    
